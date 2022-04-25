@@ -62,7 +62,7 @@ export default {
   margin: 23px;
 }
 .w-clock .clock {
-  font-size: 35px;
+  font-size: calc(25px / var(--size-divisor));
   margin-bottom: -10px;
 }
 .w-clock .data {
@@ -70,26 +70,26 @@ export default {
 }
 
 .w-weather {
-  height: 130px;
+  height: auto;
   padding: 10px 10px 10px 12px;
   display: grid;
-  width: 110px;
+  width: calc(66px / var(--size-divisor));
   margin: 5px;
   background-image: linear-gradient(139.15deg, #e697f3 5.94%, #1fcebc 98.51%);
 }
 
 .w-weather .cityName {
   color: rgb(255, 255, 255);
-  font-size: 15px;
+  font-size: calc(10px / var(--size-divisor));
 }
 .w-weather .temp {
   color: rgb(255, 255, 255);
-  font-size: 20px;
+  font-size: calc(15px / var(--size-divisor));
   padding-left: 5px;
   margin-top: -5px;
 }
 .w-weather .predicts {
   color: rgb(255, 255, 255);
-  font-size: 13px;
+  font-size: calc(10px / var(--size-divisor));
 }
 </style>

@@ -60,12 +60,24 @@ export default {
       ],
     };
   },
+  methods: {
+    fucousAnimation(e) {
+      let previous = e.target.parentNode.parentNode.previousSibling;
+      let next = e.target.parentNode.parentNode.nextSibling;
+      if (previous.nodeName != "#text") {
+        previous.style.transform = "scale(1.1)";
+      }
+      if (next.nodeName != "#text") {
+        next.style.transform = "scale(1.1)";
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .dock {
-  height: 60px;
+  height: calc(40px / var(--size-divisor));
   display: flex;
   justify-content: center;
   position: absolute;
@@ -74,15 +86,14 @@ export default {
   transform: translateX(-50%);
 }
 .dock .dock-container {
-  padding: 0px 10px 0px 10px;
+  padding: 0px 8px 0px 8px;
   width: auto;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(13px);
-  -webkit-backdrop-filter: blur(13px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .dock .dock-container li {
@@ -90,17 +101,21 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: calc(35px / var(--size-divisor));
+  height: auto;
   vertical-align: bottom;
   transition: 0.2s;
   transform-origin: 50% 100%;
 }
 .dock .dock-container li:hover {
-  margin: 0px 13px 0px 13px;
-  transform: scale(1.15);
-  transform: bottom;
-  bottom: 15px;
+  margin: 0px 10px 0px 10px;
+  padding-bottom: 5px;
+  transform: scale(1.25);
   cursor: pointer;
+}
+
+.aurora.device-desktop .link:not(.active-state):not(.no-hover):hover {
+  opacity: 1 !important;
+  transition-duration: 300ms;
 }
 </style>

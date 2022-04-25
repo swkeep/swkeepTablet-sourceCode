@@ -92,14 +92,14 @@ import store from "../js/store";
 export default {
   data() {
     return {
-      show: false,
+      show: true,
     };
   },
   setup() {
     // Framework7 Parameters
     const f7params = {
       name: "My App", // App name
-      theme: "auto", // Automatic theme detection
+      theme: "aurora", // Automatic theme detection
 
       // App store
       store: store,
@@ -175,12 +175,10 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: myFirstFont;
-  src: url("../fonts/SF.otf");
+* {
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 body {
-  font-family: myFirstFont !important;
   background: #fff0 !important;
 }
 :root {
@@ -224,8 +222,7 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%) translateY(calc(-50% - 1px));
 }
 
 .tabs-wrapper {
@@ -247,7 +244,7 @@ body {
   left: 42px;
   right: 44px;
   bottom: 42px;
-  border-radius: 10px;
+  border-radius: calc(15px / var(--size-divisor));
   overflow: auto;
 }
 
@@ -264,21 +261,112 @@ body {
   scrollbar-width: none !important; /* Firefox */
 }
 
+.page-content::-webkit-scrollbar {
+  display: none;
+}
+
 .screen::-webkit-scrollbar {
   display: none !important;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .rounded-xl {
-  border-radius: 25px;
+  border-radius: calc(10px / var(--size-divisor));
+}
+
+.block {
+  font-size: 1.01vw;
+}
+.block-title {
+  font-size: 1.1vw;
+}
+
+@media (min-width: 630px) and (min-height: 630px) {
+  .popup:not(.popup-tablet-fullscreen) {
+    border-radius: 0px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --size-divisor: 0.75;
+  }
+  .tabs-wrapper .screen {
+    border-radius: 10px;
+  }
+  .framework7-root {
+    height: 96% !important;
+  }
+  .popup:not(.popup-tablet-fullscreen) {
+    top: 60% !important;
+    height: 90%;
+  }
+  .c-app__tile {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --size-divisor: 0.67;
+  }
+  .framework7-root {
+    height: 96% !important;
+  }
+  .popup:not(.popup-tablet-fullscreen) {
+    top: 60% !important;
+    height: 90%;
+  }
+  .c-app__tile {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --size-divisor: 0.69;
+  }
+  .framework7-root {
+    height: 96% !important;
+  }
+
+  .popup:not(.popup-tablet-fullscreen) {
+    top: 60% !important;
+    height: 90%;
+  }
+  .c-app__tile {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (min-width: 1900px) {
+  :root {
+    --size-divisor: 0.55;
+  }
+  .framework7-root {
+    height: 96.9% !important;
+  }
+
+  .c-app__tile {
+    width: 60px !important;
+    height: 60px !important;
+  }
+}
+@media (min-width: 2550px) {
+  :root {
+    --size-divisor: 0.4;
+  }
+  .screen {
+    background-size: cover;
+  }
+  .framework7-root {
+    height: 97.9% !important;
+  }
+  .c-app__tile {
+    width: 95px !important;
+    height: 95px !important;
+  }
 }
 </style>

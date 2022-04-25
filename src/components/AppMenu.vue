@@ -65,7 +65,7 @@ export default {
 
 <style scoped>
 .app_menu {
-  width: 560px;
+  width: calc(455px / var(--size-divisor));
   margin-top: 30px;
 }
 
@@ -79,17 +79,18 @@ export default {
 }
 
 .c-app__tile {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.5);
   transition: 0.1s;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .c-app__tile:hover {
-  transform: scale(1.05);
   cursor: pointer;
+  transform: scale(1.1);
+  transition: 0.2s ease-in-out;
 }
 
 .app_name {

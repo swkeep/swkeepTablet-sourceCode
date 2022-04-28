@@ -5,10 +5,12 @@
         v-for="element in menu"
         :key="element"
         class="c-app__tile rounded-xl"
-        :link="element.to"
+        :link="`/${element.to}/`"
       >
-        <img :src="element.icon" alt="" srcset="" />
-        <div class="app_name">{{ element.name }}</div>
+        <div class="inner_tile">
+          <img :src="`./icons/${element.icon}`" alt="" srcset="" />
+          <div class="app_name">{{ element.lable }}</div>
+        </div>
       </f7-list-item>
     </div>
   </div>
@@ -16,49 +18,90 @@
 
 <script>
 export default {
+  props: ["toggle"],
   data() {
     return {
       posBoxA: 0,
       posBoxB: 0,
       menu: [
         {
-          icon: "./icons/carrep.png",
-          name: "RepairCar",
-          color: "",
-          to: "/about/",
+          icon: "calculator.png",
+          name: "calculator",
+          lable: "Calculator",
+          to: "expansion",
         },
         {
-          icon: "./icons/calculator.png",
-          name: "Calculator",
-          color: "",
-          to: "/form/",
-        },
-        {
-          icon: "./icons/clock.png",
-          name: "Clock",
-          color: "",
-          to: "/home/",
-        },
-        {
-          icon: "./icons/files.png",
-          name: "Files",
-          color: "",
+          icon: "calculator.png",
+          name: "calculator",
+          lable: "Calculator",
           to: "form",
         },
         {
-          icon: "./icons/settings.png",
-          name: "Settings",
-          color: "",
-          to: "/notification/",
+          icon: "clock.png",
+          name: "clock",
+          lable: "Clock",
+          to: "home",
         },
         {
-          icon: "./icons/settings.png",
-          name: "Settings",
-          color: "",
-          to: "/settings/",
+          icon: "files.png",
+          name: "files",
+          lable: "Files",
+          to: "form",
+        },
+        {
+          icon: "settings.png",
+          name: "settings",
+          lable: "Settings",
+          to: "notification",
+        },
+        {
+          icon: "settings.png",
+          name: "settings",
+          lable: "Settings",
+          to: "settings",
         },
       ],
     };
+  },
+  methods: {},
+  watch: {
+    "$root.show": function (value) {
+      if (value == true) {
+        // push APPS meta data to menu
+        this.$root.sendNUICB(
+          {
+            type: "getAppList",
+          },
+          "getAppList",
+          (applist) => {
+            if (process.env.NODE_ENV === "development") {
+            } else {
+              this.menu = [];
+              let tmp = [];
+
+              applist.forEach((element) => {
+                tmp.push({
+                  icon: element.icon,
+                  name: element.name,
+                  lable: element.lable,
+                  to: element.to,
+                  resourceName: element.resourceName,
+                  readEvent: element.readEvent,
+                  writeEvent: element.writeEvent,
+                });
+                this.menu.push({
+                  icon: element.icon,
+                  name: element.name,
+                  lable: element.lable,
+                  to: element.to,
+                });
+              });
+              this.$root.globalAppMetaData = tmp;
+            }
+          }
+        );
+      }
+    },
   },
 };
 </script>
@@ -87,6 +130,13 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
+.inner_tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .c-app__tile:hover {
   cursor: pointer;
   transform: scale(1.1);
@@ -98,6 +148,6 @@ export default {
   font-size: 11px;
   font-family: "myFirstFont", sans-serif;
   text-align: center;
-  text-shadow: black 0px 0px 3px;
+  text-shadow: black 0px 1px 5px;
 }
 </style>

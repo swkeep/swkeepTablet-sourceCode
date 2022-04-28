@@ -21,15 +21,6 @@ export default {
     AppMenu,
     Widgets,
   },
-
-  methods: {
-    calcPosOfBox() {
-      // for (const key in this.$refs["centeredDiv"]) {
-      //   //console.log(key);
-      //   //console.log(this.$refs["centeredDiv"][key].getBoundingClientRect());
-      // }
-    },
-  },
 };
 </script>
 

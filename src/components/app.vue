@@ -92,7 +92,8 @@ import store from "../js/store";
 export default {
   data() {
     return {
-      show: true,
+      show: false,
+      globalAppMetaData: [],
     };
   },
   setup() {
@@ -135,41 +136,71 @@ export default {
     TopBar,
   },
   methods: {
-    doShow() {
-      if (this.showTablet === "bounce-enter") {
-        this.showTablet = "bounce-leave";
-      } else {
-        this.showTablet = "bounce-enter";
+    toggle() {
+      this.show = !this.show;
+      if (this.show == false) {
+        this.sendNUICB(
+          {
+            type: "close",
+          },
+          "closeMenu"
+        );
       }
     },
-    toggle(cond) {
-      this.show = cond;
-      //this.show = !this.show;
+    sendNUICB(data = {}, route, cb = () => {}, err = () => {}) {
+      fetch(`https://swkeep-tablet/${route}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resp) => resp.json())
+        .then((resp) => cb(resp))
+        .catch((resp) => err(resp));
+    },
+    showNotificationCloseOnClick(massage) {
+      const self = this;
+      // Create toast
+      if (!self.notificationCloseOnClick) {
+        self.notificationCloseOnClick = f7.notification.create({
+          icon: '<i class="icon icon-f7"></i>',
+          title: massage.title,
+          titleRightText: "now",
+          subtitle: massage.subtitle,
+          closeOnClick: true,
+        });
+      }
+      // Open it
+      self.notificationCloseOnClick.open();
+      setTimeout(() => {
+        self.notificationCloseOnClick.close();
+      }, 3500);
     },
   },
   destroyed() {
     window.removeEventListener("message", this.listener);
   },
   mounted() {
-    this.listener = window.addEventListener(
-      "message",
-      (event) => {
-        const item = event.data || event.detail;
-        if (item.type === "open") {
-          this.toggle(true);
+    if (process.env.NODE_ENV === "development") {
+      this.show = true;
+    }
+    this.$nextTick(function () {
+      var self = this;
+      window.addEventListener("message", function (event) {
+        switch (event.data.action) {
+          case "open":
+            self.toggle();
+            break;
         }
-        if (item.type === "close") {
-          this.toggle(false);
+      });
+      document.onkeyup = function (data) {
+        if (data.key == "Escape") {
+          self.toggle();
         }
-      },
-      false
-    );
-    // document.addEventListener("keypress", (event) => {
-    //   if (event.code == "KeyH") {
-    //     // do something
-    //     this.toggle(true);
-    //   }
-    // });
+        f7.views.main.router.back();
+      };
+    });
   },
 };
 </script>

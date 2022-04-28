@@ -1,49 +1,51 @@
-import HomePage from '../pages/home.vue';
-import AboutPage from '../pages/about.vue';
-import FormPage from '../pages/form.vue';
-
-
-import DynamicRoutePage from '../pages/dynamic-route.vue';
 import RequestAndLoad from '../pages/request-and-load.vue';
-import NotFoundPage from '../pages/404.vue';
-import MainMenu from '../pages/MainMenu.vue';
-import Notification from '../pages/Notification.vue'
-import Settings from '../pages/Settings.vue'
-
 
 var routes = [{
         path: '/',
-        component: MainMenu,
-
+        asyncComponent: () =>
+            import ('../pages/MainMenu.vue')
     },
     {
         path: '/about/',
-        component: AboutPage,
-
+        asyncComponent: () =>
+            import ('../pages/about.vue')
     },
     {
         path: '/form/',
-        component: FormPage,
-
+        asyncComponent: () =>
+            import ('../pages/form.vue'),
+        beforeEnter: function({ resolve, reject }) {
+            console.log('s');
+            resolve()
+        },
     },
+
     {
         path: '/home/',
-        component: HomePage,
-
+        asyncComponent: () =>
+            import ('../pages/home.vue')
     },
     {
         path: '/notification/',
-        component: Notification,
-
+        asyncComponent: () =>
+            import ('../pages/Notification.vue')
     },
     {
         path: '/settings/',
-        component: Settings,
+        asyncComponent: () =>
+            import ('../pages/Settings.vue')
+
+    },
+    {
+        path: '/expansion/',
+        asyncComponent: () =>
+            import ('../pages/ExpansionTrunk.vue')
 
     },
     {
         path: '/dynamic-route/blog/:blogId/post/:postId/',
-        component: DynamicRoutePage,
+        asyncComponent: () =>
+            import ('../pages/dynamic-route.vue')
     },
     {
         path: '/request-and-load/user/:userId/',
@@ -90,7 +92,8 @@ var routes = [{
     },
     {
         path: '(.*)',
-        component: NotFoundPage,
+        asyncComponent: () =>
+            import ('../pages/404.vue')
     },
 ];
 

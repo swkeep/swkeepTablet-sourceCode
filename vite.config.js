@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 
 const SRC_DIR = path.resolve(__dirname, './src');
 const PUBLIC_DIR = path.resolve(__dirname, './public');
-const BUILD_DIR = path.resolve(__dirname, 'D:/NEW_SERVER/txData/NewTestserver_448B73.base/resources/[swkeep]/rev/html', );
+const BUILD_DIR = path.resolve(__dirname, 'D:/NEW_SERVER/txData/NewTestserver_448B73.base/resources/[swkeep]/swkeep-tablet/html', );
 
 export default {
     plugins: [

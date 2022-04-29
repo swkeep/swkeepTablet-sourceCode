@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import Dock from "../components/Dock.vue";
-import AppMenu from "../components/AppMenu.vue";
-import Widgets from "../components/Widgets.vue";
+import Dock from "../components/Main/Dock.vue";
+import AppMenu from "../components/Main/AppMenu.vue";
+import Widgets from "../components/Main/Widgets.vue";
 
 export default {
   components: {
@@ -36,18 +36,6 @@ export default {
 .main-app-screen {
   display: flex;
   flex-direction: column;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding: 10px;
-}
-
-.rowLeft {
-  justify-content: left !important;
-  margin-left: 42px;
 }
 
 .top-stories {

@@ -19,58 +19,46 @@ export default {
           icon: "./icons/Landscape.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
         {
           icon: "./icons/notes.png",
           name: "RepairCar",
           color: "",
-          to: "http://google.com",
+          to: "",
         },
         {
           icon: "./icons/reminders.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
         {
           icon: "./icons/messages.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
         {
           icon: "./icons/facetime.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
         {
           icon: "./icons/appstore.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
         {
           icon: "./icons/safari.png",
           name: "RepairCar",
           color: "",
-          to: "/about/",
+          to: "",
         },
       ],
     };
-  },
-  methods: {
-    fucousAnimation(e) {
-      let previous = e.target.parentNode.parentNode.previousSibling;
-      let next = e.target.parentNode.parentNode.nextSibling;
-      if (previous.nodeName != "#text") {
-        previous.style.transform = "scale(1.1)";
-      }
-      if (next.nodeName != "#text") {
-        next.style.transform = "scale(1.1)";
-      }
-    },
   },
 };
 </script>

@@ -5,241 +5,58 @@
 
     <f7-row>
       <f7-col width="40">
-        <f7-block strong inset>
-          <f7-block-title>Owner infromation</f7-block-title>
-          <f7-list inline-labels no-hairlines-md>
-            <!-- vehicle Data / Left col -->
-            <f7-list-input
-              label="Name"
-              type="text"
-              placeholder="Your name"
-              disabled
-              :value="`${vehicleData.personalInfo.firstname} ${vehicleData.personalInfo.lastname}`"
-            >
-            </f7-list-input>
-            <f7-list-input
-              label="Owner ID"
-              type="tel"
-              placeholder="Owner ID number"
-              :value="vehicleData.ownerID"
-            >
-              <f7-icon icon="demo-list-icon"></f7-icon>
-            </f7-list-input>
-            <f7-list-input
-              label="Phone"
-              type="tel"
-              placeholder="Owner phone number"
-              :value="vehicleData.personalInfo.phone"
-            >
-              <f7-icon icon="demo-list-icon"></f7-icon>
-            </f7-list-input>
-
-            <f7-list-input
-              label="Gender"
-              type="text"
-              :value="vehicleData.personalInfo.gender ? 'Female' : 'Male'"
-              disabled
-            >
-              <f7-icon icon="demo-list-icon"></f7-icon>
-            </f7-list-input>
-
-            <f7-list-input
-              label="Birthdate"
-              type="text"
-              :value="vehicleData.personalInfo.birthdate"
-              disabled
-            >
-              <f7-icon icon="demo-list-icon"></f7-icon>
-            </f7-list-input>
-          </f7-list>
-          <f7-button
-            fill
-            preloader
-            :loading="onWantToGetVehicle"
-            :color="colorCode"
-            @click="getDataFromServer"
-          >
-            Get nearby vehicle
-          </f7-button>
-        </f7-block>
+        <owner-information
+          :vehicleData="vehicleData"
+          :onWantToGetVehicle="onWantToGetVehicle"
+          :colorCode="colorCode"
+          :getDataFromServer="getDataFromServer"
+        ></owner-information>
       </f7-col>
       <f7-col width="60">
-        <f7-block-title>Vehicle Model</f7-block-title>
-        <f7-block strong inset>
-          <h2>Model: {{ vehicleData.model }}</h2>
-
-          <f7-swiper pagination navigation scrollbar v-if="showSwiper == true">
-            <f7-swiper-slide
-              v-for="image in vehicleData.images"
-              :key="image"
-              style="justify-content: center; display: flex"
-            >
-              <img :src="image" alt="" srcset="" />
-            </f7-swiper-slide>
-          </f7-swiper>
-        </f7-block>
-        <f7-list inset>
-          <f7-list-item
-            title="Upgrades"
-            smart-select
-            :smart-select-params="{
-              openIn: 'popup',
-              searchbar: true,
-              searchbarPlaceholder: 'Search updgrades',
-            }"
-          >
-            <select name="Weight" multiple @change="testValue">
-              <optgroup label="Trunk size">
-                <option
-                  :value="upgrade.size"
-                  v-for="upgrade in vehicleUpgradeData.upgradesAvailableForThisVehicle"
-                  :key="upgrade.lable"
-                  :selected="upgrade.upgraded"
-                >
-                  {{ upgrade.lable }}
-                </option>
-              </optgroup>
-            </select>
-          </f7-list-item>
-        </f7-list>
+        <vehicle-infromation :vehicleData="vehicleData"></vehicle-infromation>
+        <vehicle-upgrade-list
+          :vehicleUpgradeData="vehicleUpgradeData"
+          :showSwiper="showSwiper"
+          :testValue="testValue"
+        ></vehicle-upgrade-list>
         <f7-block>
-          <f7-row>
-            <f7-col width="50">
-              <f7-button
-                fill
-                sheet-open=".demo-sheet-swipe-to-close"
-                :disabled="vehicleData.plate === ''"
-              >
-                Show Plate
-              </f7-button>
+          <f7-row class="row-justbet">
+            <f7-col width="40">
+              <vehicle-plate :vehicleData="vehicleData"></vehicle-plate>
             </f7-col>
-            <f7-col width="50">
-              <f7-button
-                fill
-                sheet-open=".demo-sheet-swipe-to-step"
-                :disabled="readyToPay !== true"
-              >
-                Check bill
-              </f7-button>
+            <f7-col width="40">
+              <upgrade-bill
+                :vehicleUpgradeData="vehicleUpgradeData"
+                :readyToPay="readyToPay"
+                :payColorCode="payColorCode"
+                :paymentAndUpgrade="paymentAndUpgrade"
+                :onPayment="onPayment"
+                :commissionPercentage="commissionPercentage"
+              ></upgrade-bill>
             </f7-col>
           </f7-row>
         </f7-block>
       </f7-col>
     </f7-row>
-
-    <f7-sheet
-      class="demo-sheet-swipe-to-step"
-      style="height: auto; --f7-sheet-bg-color: #fff"
-      swipe-to-close
-      swipe-to-step
-      backdrop
-      closeByBackdropClick
-      v-if="readyToPay === true"
-    >
-      <div class="sheet-modal-swipe-step">
-        <div
-          class="
-            display-flex
-            padding
-            justify-content-space-between
-            align-items-center
-          "
-        >
-          <div style="font-size: 18px"><b>Total:</b></div>
-          <div style="font-size: 22px">
-            <b>${{ vehicleUpgradeData.billPrice }}</b>
-          </div>
-        </div>
-        <div class="padding-horizontal padding-bottom">
-          <f7-button
-            large
-            fill
-            preloader
-            @click="paymentAndUpgrade"
-            :color="payColorCode"
-            :loading="onPayment"
-            :disabled="vehicleUpgradeData.billPrice == 0"
-          >
-            Make Payment
-          </f7-button>
-          <div class="margin-top text-align-center">
-            Swipe up for more details
-          </div>
-        </div>
-      </div>
-      <f7-block-title medium class="margin-top">Your order:</f7-block-title>
-      <f7-list no-hairlines>
-        <!-- selected Updgrades -->
-        <template
-          v-for="upgrade in vehicleUpgradeData.selectedUpdgrades"
-          :key="upgrade.lable"
-        >
-          <f7-list-item
-            :title="`+${upgrade.lable}`"
-            v-if="upgrade.serverSideUpgraded !== true"
-          >
-            <template #after>
-              <b class="text-color-green">${{ upgrade.price }}</b>
-            </template>
-          </f7-list-item>
-        </template>
-        <!-- deselected Updgrades -->
-        <template
-          v-for="upgrade in vehicleUpgradeData.deselectedUpdgrades"
-          :key="upgrade.lable"
-        >
-          <f7-list-item
-            :title="`-${upgrade.lable}`"
-            v-if="upgrade.serverSideUpgraded === true"
-          >
-            <template #after>
-              <b class="text-color-red">
-                ${{ upgrade.price * commissionPercentage }}
-              </b>
-            </template>
-          </f7-list-item>
-        </template>
-      </f7-list>
-    </f7-sheet>
-
-    <f7-sheet
-      class="demo-sheet-swipe-to-close"
-      style="height: auto; --f7-sheet-bg-color: #fff"
-      swipe-to-close
-      backdrop
-      v-if="vehicleData.plate !== ''"
-    >
-      <f7-page-content>
-        <f7-block>
-          <div class="plate">
-            <img src="../assets/dark.png" />
-            <span>{{ this.vehicleData.plate }}</span>
-          </div>
-        </f7-block>
-      </f7-page-content>
-    </f7-sheet>
   </f7-page>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import { f7, f7ready } from "framework7-vue";
+import API from "../js/API";
+import { f7 } from "framework7-vue";
+import OwnerInformation from "../components/App/Expantion/OwnerInformation.vue";
+import VehicleInfromation from "../components/App/Expantion/VehicleInfromation.vue";
+import VehicleUpgradeList from "../components/App/Expantion/VehicleUpgradeList.vue";
+import VehiclePlate from "../components/App/Expantion/VehiclePlate.vue";
+import UpgradeBill from "../components/App/Expantion/UpgradeBill.vue";
 
 export default {
-  setup() {
-    const isLoading = ref(false);
-    const load = () => {
-      if (isLoading.value) return;
-      isLoading.value = true;
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 4000);
-    };
-
-    return {
-      isLoading,
-      load,
-    };
+  components: {
+    OwnerInformation,
+    VehicleInfromation,
+    VehicleUpgradeList,
+    VehiclePlate,
+    UpgradeBill,
   },
   data() {
     if (process.env.NODE_ENV === "development") {
@@ -319,7 +136,7 @@ export default {
   methods: {
     getImage(model) {
       // later if we have api to get images
-      fetch(`https://gta.now.sh/api/vehicles/${model}`)
+      fetch(``)
         .then((response) => response.json())
         .then((data) => {
           let tmp = [];
@@ -393,21 +210,19 @@ export default {
       this.getCurrentPageMetaData();
       this.onPayment = true;
 
-      this.$root.sendNUICB(
-        {
-          type: "upgradeReq",
-          content: {
-            selected: this.vehicleUpgradeData.selectedUpdgrades,
-            deselected: this.vehicleUpgradeData.deselectedUpdgrades,
-            billPrice: this.vehicleData.billPrice,
-            metaData: this.appMetaData,
-            vehicleData: this.vehicleData,
-          },
+      API.post("upgradeReq", {
+        type: "upgradeReq",
+        content: {
+          selected: this.vehicleUpgradeData.selectedUpdgrades,
+          deselected: this.vehicleUpgradeData.deselectedUpdgrades,
+          billPrice: this.vehicleData.billPrice,
+          metaData: this.appMetaData,
+          vehicleData: this.vehicleData,
         },
-        "upgradeReq",
-        (cb) => {
+      })
+        .then((res) => {
           this.onPayment = false;
-          if (cb == true) {
+          if (res == true) {
             this.payColorCode = "green";
             setTimeout(() => {
               this.$root.toggle(); // this should destroy current page
@@ -416,8 +231,8 @@ export default {
               f7.views.main.router.back();
             }, 2500);
           }
-        },
-        (err) => {
+        })
+        .catch((err) => {
           this.onPayment = false;
           this.payColorCode = "red";
           this.$root.showNotificationCloseOnClick({
@@ -428,20 +243,12 @@ export default {
             this.payColorCode = "blue";
             f7.sheet.close(".demo-sheet-swipe-to-step", true);
           }, 2500);
-        }
-      );
+        });
     },
     testValue() {
       let selectedUpdgrades = f7.smartSelect.get(".smart-select").getValue();
       this.seprateSelectedUpgrades(selectedUpdgrades);
       this.calBillPrice();
-    },
-    openIndicator() {
-      const self = this;
-      f7.preloader.show();
-      if (process.env.NODE_ENV === "development") {
-        f7.preloader.hide();
-      }
     },
     getDataFromServer() {
       this.getCurrentPageMetaData();
@@ -472,7 +279,6 @@ export default {
             currentSize: appInitData.vehicleUpgradeData.currentSize,
             maxUpgradeSize: appInitData.vehicleUpgradeData.maxUpgradeSize,
           };
-          // this.getImage(this.vehicleData.model);
         },
         (err) => {
           this.onWantToGetVehicle = false;
@@ -492,27 +298,7 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: "Plate";
-  src: url("../fonts/PlatNomorWyVnn.ttf") format("ttf"),
-    url("../fonts/PlatNomoreZ2dm.otf") format("opentype");
-}
-.plate {
-  font-family: Plate, "Plate";
-  height: 8rem;
-  width: 16rem;
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
-  text-align: center;
-}
-
-.plate span {
-  font-size: 50px;
-  color: white;
-  position: absolute;
-  top: 58%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.row-justbet {
+  justify-content: space-between !important;
 }
 </style>

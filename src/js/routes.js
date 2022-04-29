@@ -15,7 +15,6 @@ var routes = [{
         asyncComponent: () =>
             import ('../pages/form.vue'),
         beforeEnter: function({ resolve, reject }) {
-            console.log('s');
             resolve()
         },
     },

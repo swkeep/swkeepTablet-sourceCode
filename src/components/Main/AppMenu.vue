@@ -2,7 +2,7 @@
   <div class="app_menu">
     <div class="o-apps">
       <f7-list-item
-        v-for="element in menu"
+        v-for="element in newMenu"
         :key="element"
         class="c-app__tile rounded-xl"
         :link="`/${element.to}/`"
@@ -17,56 +17,8 @@
 </template>
 
 <script>
-import API from "../../js/API";
-
 export default {
-  data() {
-    return {
-      menu: [
-        {
-          icon: "settings.png",
-          name: "settings",
-          lable: "Settings",
-          to: "expansion",
-        },
-      ],
-    };
-  },
-  watch: {
-    "$root.show": function (value) {
-      if (value == true) {
-        // push APPS meta data to menu
-        API.get("getAppList")
-          .then((applist) => {
-            this.menu = [];
-            let tmp = [];
-
-            applist.forEach((element) => {
-              tmp.push({
-                icon: element.icon,
-                name: element.name,
-                lable: element.lable,
-                to: element.to,
-                resourceName: element.resourceName,
-                readEvent: element.readEvent,
-                writeEvent: element.writeEvent,
-              });
-              this.menu.push({
-                icon: element.icon,
-                name: element.name,
-                lable: element.lable,
-                to: element.to,
-              });
-            });
-            this.$root.globalAppMetaData = tmp;
-          })
-          .catch((err) => {
-            console.log(err);
-            this.$root.showNotificationCloseOnClick(err);
-          });
-      }
-    },
-  },
+  props: ["newMenu"],
 };
 </script>
 

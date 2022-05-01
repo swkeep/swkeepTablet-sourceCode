@@ -74,7 +74,7 @@ export default {
   z-index: 9999;
   position: relative;
   background-color: white;
-  height: 27px;
+  height: 28px;
 }
 
 .topbar-container {

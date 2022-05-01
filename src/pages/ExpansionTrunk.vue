@@ -209,9 +209,8 @@ export default {
     paymentAndUpgrade() {
       this.getCurrentPageMetaData();
       this.onPayment = true;
-
-      API.post("upgradeReq", {
-        type: "upgradeReq",
+      API.post("callbackDispatcher", {
+        type: "update",
         content: {
           selected: this.vehicleUpgradeData.selectedUpdgrades,
           deselected: this.vehicleUpgradeData.deselectedUpdgrades,
@@ -225,11 +224,11 @@ export default {
           if (res == true) {
             this.payColorCode = "green";
             setTimeout(() => {
-              this.$root.toggle(); // this should destroy current page
+              this.$root.toggle(false); // this should destroy current page
               f7.sheet.close(".demo-sheet-swipe-to-step", true);
               this.payColorCode = "blue";
               f7.views.main.router.back();
-            }, 2500);
+            }, 1500);
           }
         })
         .catch((err) => {
@@ -253,16 +252,14 @@ export default {
     getDataFromServer() {
       this.getCurrentPageMetaData();
       this.onWantToGetVehicle = true;
-      this.$root.sendNUICB(
-        {
-          type: "openApp",
-          content: {
-            appName: this.appName,
-            metaData: this.appMetaData,
-          },
+      API.post("callbackDispatcher", {
+        type: "openApp",
+        content: {
+          appName: this.appName,
+          metaData: this.appMetaData,
         },
-        "openApp",
-        (appInitData) => {
+      })
+        .then((appInitData) => {
           this.onWantToGetVehicle = false;
           // f7.preloader.hide();
           this.vehicleData = {
@@ -279,8 +276,8 @@ export default {
             currentSize: appInitData.vehicleUpgradeData.currentSize,
             maxUpgradeSize: appInitData.vehicleUpgradeData.maxUpgradeSize,
           };
-        },
-        (err) => {
+        })
+        .catch((err) => {
           this.onWantToGetVehicle = false;
           this.$root.showNotificationCloseOnClick({
             title: "Error",
@@ -290,8 +287,7 @@ export default {
           setTimeout(() => {
             this.colorCode = "blue";
           }, 2500);
-        }
-      );
+        });
     },
   },
 };

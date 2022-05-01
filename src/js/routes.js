@@ -6,9 +6,9 @@ var routes = [{
             import ('../pages/MainMenu.vue')
     },
     {
-        path: '/about/',
+        path: '/store/',
         asyncComponent: () =>
-            import ('../pages/about.vue')
+            import ('../pages/AppStore.vue')
     },
     {
         path: '/form/',

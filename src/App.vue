@@ -13,6 +13,7 @@
   </Transition>
 </template>
 <script>
+import API from "./js/API";
 import { f7 } from "framework7-vue";
 import TopBar from "./components/Main/TopBar.vue";
 
@@ -45,41 +46,28 @@ export default {
     TopBar,
   },
   methods: {
-    toggle() {
-      this.show = !this.show;
-      if (this.show == false) {
-        this.sendNUICB(
-          {
-            type: "close",
-          },
-          "closeMenu"
-        );
+    toggle(state) {
+      this.show = state;
+      if (state == false) {
+        API.post("callbackDispatcher", {
+          type: "closeTablet",
+        })
+          .then((e) => {})
+          .catch((err) => {
+            console.log(err);
+          });
       }
-    },
-    sendNUICB(data = {}, route, cb = () => {}, err = () => {}) {
-      fetch(`https://swkeep-tablet/${route}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((resp) => resp.json())
-        .then((resp) => cb(resp))
-        .catch((resp) => err(resp));
     },
     showNotificationCloseOnClick(massage) {
       const self = this;
       // Create toast
-      if (!self.notificationCloseOnClick) {
-        self.notificationCloseOnClick = f7.notification.create({
-          icon: '<i class="icon icon-f7"></i>',
-          title: massage.title,
-          titleRightText: "now",
-          subtitle: massage.subtitle,
-          closeOnClick: true,
-        });
-      }
+      self.notificationCloseOnClick = f7.notification.create({
+        icon: '<i class="icon icon-f7"></i>',
+        title: massage.title,
+        titleRightText: "now",
+        subtitle: massage.subtitle,
+        closeOnClick: true,
+      });
       // Open it
       self.notificationCloseOnClick.open();
       setTimeout(() => {
@@ -99,15 +87,14 @@ export default {
       window.addEventListener("message", function (event) {
         switch (event.data.action) {
           case "open":
-            self.toggle();
+            self.toggle(true);
             break;
         }
       });
       document.onkeyup = function (data) {
         if (data.key == "Escape") {
-          self.toggle();
+          self.toggle(false);
         }
-        // f7.views.main.router.back();
       };
     });
   },
